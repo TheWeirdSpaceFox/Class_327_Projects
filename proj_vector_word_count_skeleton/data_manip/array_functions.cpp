@@ -1,0 +1,147 @@
+#include <algorithm>
+#include "../includes/array_functions.h"
+#include "../includes/utilities.h"
+
+namespace KP{
+	//remove all elements from vector that tracks words and their occurrences
+	void clear(std::vector<constants::entry>  &entries){
+		entries.clear();
+	}
+
+	//return how many unique words are in the vector
+	int getSize(std::vector<constants::entry>  &entries){
+		return entries.size();
+	}
+
+	//get word at location i iff i<size(see above function), otherwise return the last word
+	//(this is lazy, should throw an exception instead)
+	std::string getWordAt(std::vector<constants::entry>  &entries, int i){
+		if(i >= entries.size()){
+			return entries.at(entries.size()-1).word;
+		}
+		return entries.at(i).word;
+
+	}
+
+	//get number_occurences at location i iff i<size(see above function), otherwise return the last number_occurences
+	int getNumbOccurAt(std::vector<constants::entry>  &entries,int i){
+		if(i >= entries.size()){
+			return entries.at(entries.size()-1).number_occurences;
+		}
+		return entries.at(i).number_occurences;
+
+	}
+
+	/*loop through the entire file, one line at a time
+	 * call processLine on each line from the file
+	 * returns false: myfstream is not open
+	 *         true: otherwise*/
+	bool processFile(std::vector<constants::entry>  &entries,std::fstream &myfstream){
+		if(! myfstream.is_open()){
+				return false;
+			}
+
+			std::string line;
+			while(std::getline(myfstream,line)){
+				processLine(entries,line);
+			}
+
+			return true;
+
+	}
+
+	/*take 1 line and extract all the tokens from it
+	feed each token to processToken for recording*/
+	void processLine(std::vector<constants::entry>  &entries,std::string &myLine){
+		std::string token;
+
+		for(int i = 0; i < myLine.length(); i++){
+			if(myLine.at(i) != ' '){
+				token += (myLine.at(i));
+				if(i == myLine.length()-1){
+					processToken(entries,token);
+				}
+			}
+			else{
+				processToken(entries,token);
+				token = "";
+			}
+		}
+	}
+
+	/*NOTE: first call strip_unwanted_chars from utilities to get rid of rubbish chars in the token
+	 * if the token is an empty string after this then return since we are not tracking empty strings
+	 *
+	 * Keep track of how many times each token seen, in other words look thru the entries vector that
+	 * holds entry structs to see if there is a struct that has entry.word==token,
+	 * if so increment entry.number_occurences, otherwise create a new entry struct for the token,
+	 * set entry.number_occurences=1 and add it to the entries vector*/
+	void processToken(std::vector<constants::entry>  &entries,std::string &token){
+		if(!strip_unwanted_chars(token)){
+				return;
+			}
+			for(int i = 0; i < getSize(entries); i++){
+//				std::string current = getWordAt(entries,i);
+//				std::string lower;
+//				for(int j = 0; j > current.length(); j++){
+//					lower += tolower(current.at(j));
+//				}
+
+				if(getWordAt(entries,i) == token){
+					entries.at(i).number_occurences++;
+					return;
+				}
+			}
+			constants::entry newEntry;
+			newEntry.number_occurences = 1;
+			newEntry.word = token;
+			toUpper(token);
+			newEntry.word_uppercase = token;
+			entries.push_back(newEntry);
+
+	}
+	bool compareWord(const constants::entry& x, const constants::entry& y)
+	{
+		std::string word1;
+		word1 += tolower(x.word[0]) + x.word[1,-1];
+		std::string word2;
+		word2 += tolower(y.word[0]) + y.word[1,-1];
+		return word1 < word2;
+	}
+
+	bool compareWordDesc(const constants::entry& x, const constants::entry& y)
+	{
+		return x.word > y.word;
+	}
+
+	bool compareOccurences(const constants::entry& x, const constants::entry& y)
+	{
+		return x.number_occurences > y.number_occurences;
+	}
+
+
+	/*
+	 * Sort entries based on so enum value.
+	 * Please provide a solution that sorts according to the enum
+	 * The presence of the enum implies a switch statement based on its value
+	 * See the course lectures and demo projects for how to sort a vector of structs
+	 */
+	void sort(std::vector<constants::entry>  &entries, constants::sortOrder so){
+		switch(so){
+
+			case constants::ASCENDING:
+				std::sort(entries.begin(),entries.end(),compareWord);
+				break;
+			case constants::DESCENDING:
+				std::sort(entries.begin(),entries.end(),compareWordDesc);
+				break;
+			case constants::NUMBER_OCCURRENCES:
+				std::sort(entries.begin(),entries.end(),compareOccurences);
+				break;
+			default:
+				break;
+
+	}
+
+	}
+}
