@@ -1,0 +1,75 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+-include ../makefile.init
+
+RM := rm -rf
+
+# All of the sources participating in the build are defined here
+-include sources.mk
+-include src/subdir.mk
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(strip $(C++_DEPS)),)
+-include $(C++_DEPS)
+endif
+ifneq ($(strip $(CC_DEPS)),)
+-include $(CC_DEPS)
+endif
+ifneq ($(strip $(CPP_DEPS)),)
+-include $(CPP_DEPS)
+endif
+ifneq ($(strip $(CXX_DEPS)),)
+-include $(CXX_DEPS)
+endif
+ifneq ($(strip $(C_DEPS)),)
+-include $(C_DEPS)
+endif
+ifneq ($(strip $(C_UPPER_DEPS)),)
+-include $(C_UPPER_DEPS)
+endif
+endif
+
+-include ../makefile.defs
+
+OPTIONAL_TOOL_DEPS := \
+$(wildcard ../makefile.defs) \
+$(wildcard ../makefile.init) \
+$(wildcard ../makefile.targets) \
+
+
+BUILD_ARTIFACT_NAME := 327_proj3_test
+BUILD_ARTIFACT_EXTENSION :=
+BUILD_ARTIFACT_PREFIX :=
+BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
+
+# Add inputs and outputs from these tool invocations to the build variables 
+
+# All Target
+all: main-build
+
+# Main-build Target
+main-build: 327_proj3_test
+
+dependents:
+	-cd /home/amanda/Desktop/Projects/3C/327_proj3_fileio/Debug && $(MAKE) clean all
+	-cd /home/amanda/Desktop/Projects/3C/327_proj3_stringparser/Debug && $(MAKE) clean all
+
+# Tool invocations
+327_proj3_test: $(OBJS) $(USER_OBJS) /home/amanda/Desktop/Projects/3C/327_proj3_fileio/Debug/lib327_proj3_fileIO.a /home/amanda/Desktop/Projects/3C/327_proj3_stringparser/Debug/lib327_proj3_stringparser.a makefile $(OPTIONAL_TOOL_DEPS)
+	@echo 'Building target: $@'
+	@echo 'Invoking: GCC C++ Linker'
+	g++ -L"/home/amanda/Desktop/Projects/3C/327_proj3_stringparser/Debug" -L"/home/amanda/Desktop/Projects/3C/327_proj3_fileio/Debug" -L../../327_proj3_fileIO/Debug -o "327_proj3_test" $(OBJS) $(USER_OBJS) $(LIBS) -l327_proj3_stringparser -l327_proj3_fileIO
+	@echo 'Finished building target: $@'
+	@echo ' '
+
+# Other Targets
+clean:
+	-$(RM) 327_proj3_test
+	-@echo ' '
+
+.PHONY: all clean dependents main-build
+/home/amanda/Desktop/Projects/3C/327_proj3_fileio/Debug/lib327_proj3_fileIO.a:
+/home/amanda/Desktop/Projects/3C/327_proj3_stringparser/Debug/lib327_proj3_stringparser.a:
+
+-include ../makefile.targets
